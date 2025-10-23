@@ -34,4 +34,4 @@ jobs:
         if: steps.composer-cache.outputs.cache-hit != 'true'
         run: composer install -n
 
-      - run: vendor/bin/phpunit
+      - run: composer test
