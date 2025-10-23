@@ -1,11 +1,11 @@
 <?php
 
-use Genome\Merchant\MerchantAccount;
+use Genome\Merchant\MerchantAccountManager;
 use PHPUnit\Framework\TestCase;
 
-class HostedPaymentPageTest extends TestCase {
+class HostedPaymentPageManagerTest extends TestCase {
     public function testGenerateInitializationSignatureMODE_A() {
-        $merchant = new MerchantAccount(1, "foo");
+        $merchant = new MerchantAccountManager(1, "foo");
         $hpp = $merchant->getHostedPaymentPage("02ruy9h8sdygfsi766");
 
         $this->assertSame(
@@ -15,7 +15,7 @@ class HostedPaymentPageTest extends TestCase {
     }
 
     public function testAssertCallbackSignature() {
-        $merchant = new MerchantAccount(1, "foo");
+        $merchant = new MerchantAccountManager(1, "foo");
         $hpp = $merchant->getHostedPaymentPage("ksadasu8h89ha");
 
         $hpp->assertCallbackSignature(

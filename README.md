@@ -4,12 +4,12 @@ Genome Merchant Client Library
 Initialize merchant account accessor object.
 
 ```php
-use Genome\Merchant\MerchantAccount;
+use Genome\Merchant\MerchantAccountManager;
 
 $merchantAccountId = 1;         // Your merchant account identifier
 $merchantAccountSecret = "foo"; // Your merchant account secret
 
-$merchantAccount = $merchant = new MerchantAccount($merchantAccountId, $merchantAccountSecret);
+$merchantAccount = $merchant = new MerchantAccountManager($merchantAccountId, $merchantAccountSecret);
 ```
 
 

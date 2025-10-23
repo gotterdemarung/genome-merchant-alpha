@@ -2,7 +2,7 @@
 
 namespace Genome\Merchant;
 
-class MerchantAccount
+class MerchantAccountManager
 {
     /**
      * @var int
@@ -32,12 +32,12 @@ class MerchantAccount
         return $this->accountId;
     }
 
-    public function getHostedPaymentPage($secret): HostedPaymentPage
+    public function getHostedPaymentPage($secret): HostedPaymentPageManager
     {
         if (!is_string($secret)) {
             throw new \InvalidArgumentException('Secret must be a string');
         }
 
-        return new HostedPaymentPage($this, $secret);
+        return new HostedPaymentPageManager($this, $secret);
     }
 }

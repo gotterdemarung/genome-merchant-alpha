@@ -2,12 +2,10 @@
 
 namespace Genome\Merchant;
 
-use Decimal\Decimal;
-
-class HostedPaymentPage
+class HostedPaymentPageManager
 {
     /**
-     * @var MerchantAccount
+     * @var MerchantAccountManager
      */
     private $merchant;
 
@@ -18,7 +16,7 @@ class HostedPaymentPage
 
     public function __construct($merchant, $secret)
     {
-        if (!($merchant instanceof MerchantAccount)) {
+        if (!($merchant instanceof MerchantAccountManager)) {
             throw new \InvalidArgumentException('$merchant must be a MerchantAccount');
         }
         if (!is_string($secret)) {
@@ -29,6 +27,16 @@ class HostedPaymentPage
         $this->secret = $secret;
     }
 
+    /**
+     * Generates HPP initialization signature in MODE_A format.
+     *
+     * @param float $amount Payment amount.
+     * @param string $currency Payment currency.
+     * @param string $order_id Unique payment order identifier.
+     * @param string $user_id Payee user identifier.
+     * @param string $mcc Merchant category code.
+     * @return string Generated signature.
+     */
     public function generateInitializationSignatureMODE_A(
         float  $amount,
         string $currency,
