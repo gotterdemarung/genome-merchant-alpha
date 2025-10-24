@@ -2,6 +2,9 @@
 
 namespace Genome\Merchant;
 
+/**
+ * General manager for merchant account activity.
+ */
 class MerchantAccountManager
 {
     /**
@@ -14,30 +17,50 @@ class MerchantAccountManager
      */
     private $password;
 
-    public function __construct($accountId, $password)
-    {
-        if (!is_int($accountId)) {
-            throw new \InvalidArgumentException('Account ID must be an integer');
-        }
-        if (!is_string($password)) {
-            throw new \InvalidArgumentException('Password must be a string');
-        }
+    /**
+     * @var Environment
+     */
+    private $environment;
 
+    /**
+     * Constructor.
+     *
+     * @param int $accountId Merchant account identifier.
+     * @param string $password Merchant password.
+     * @param Environment|null $environment Environment settings.
+     */
+    public function __construct(int $accountId, string $password, Environment $environment = null)
+    {
         $this->accountId = $accountId;
         $this->password = $password;
+        $this->environment = is_null($environment) ? Environment::getProduction() : $environment;
     }
 
-    public function getAccountId()
+    /**
+     * @return Environment Environment settings.
+     */
+    public function getEnvironment(): Environment
+    {
+        return $this->environment;
+    }
+
+    /**
+     * @return int Merchant account.
+     */
+    public function getAccountId(): int
     {
         return $this->accountId;
     }
 
-    public function getHostedPaymentPage($secret): HostedPaymentPageManager
+    /**
+     * Constructs and returns hosted payment page manager.
+     *
+     * @param string $api_key Hosted payment page API key.
+     * @param string $api_secret Hosted payment page secret.
+     * @return HostedPaymentPageManager.
+     */
+    public function getHostedPaymentPageManager(string $api_key, string $api_secret): HostedPaymentPageManager
     {
-        if (!is_string($secret)) {
-            throw new \InvalidArgumentException('Secret must be a string');
-        }
-
-        return new HostedPaymentPageManager($this, $secret);
+        return new HostedPaymentPageManager($this, $api_key, $api_secret);
     }
 }

@@ -2,6 +2,9 @@
 
 namespace Genome\Merchant;
 
+/**
+ * Hosted payment page manager.
+ */
 class HostedPaymentPageManager
 {
     /**
@@ -12,51 +15,57 @@ class HostedPaymentPageManager
     /**
      * @var string
      */
-    private $secret;
+    private $api_key;
 
-    public function __construct($merchant, $secret)
+    /**
+     * @var string
+     */
+    private $api_secret;
+
+    /**
+     * Constructor.
+     * This constructor should not be invoked directly, use getter from MerchantAccountManager instead.
+     *
+     * @param MerchantAccountManager $merchant
+     * @param string $api_key
+     * @param string $api_secret
+     */
+    public function __construct(MerchantAccountManager $merchant, string $api_key, string $api_secret)
     {
-        if (!($merchant instanceof MerchantAccountManager)) {
-            throw new \InvalidArgumentException('$merchant must be a MerchantAccount');
-        }
-        if (!is_string($secret)) {
-            throw new \InvalidArgumentException('Secret must be a string');
-        }
-
         $this->merchant = $merchant;
-        $this->secret = $secret;
+        $this->api_key = $api_key;
+        $this->api_secret = $api_secret;
     }
 
     /**
      * Generates HPP initialization signature in MODE_A format.
      *
-     * @param float $amount Payment amount.
-     * @param string $currency Payment currency.
-     * @param string $order_id Unique payment order identifier.
-     * @param string $user_id Payee user identifier.
-     * @param string $mcc Merchant category code.
+     * @param HostedPayment $hostedPayment
      * @return string Generated signature.
      */
-    public function generateInitializationSignatureMODE_A(
-        float  $amount,
-        string $currency,
-        string $order_id,
-        string $user_id,
-        string $mcc
-    ): string
+    public function generateInitializationSignatureMODE_A(HostedPayment $hostedPayment): string
     {
         $subject = sprintf(
             "%s|%s|%.2f|%s|%s|%s|%s",
-            $this->secret,
+            $this->api_secret,
             "MODE_A",
-            $amount,
-            $currency,
-            $order_id,
-            $user_id,
-            $mcc
+            $hostedPayment->getAmount(),
+            $hostedPayment->getCurrency(),
+            $hostedPayment->getOrderId(),
+            $hostedPayment->getUserId(),
+            $hostedPayment->getMcc()
         );
 
         return hash("sha256", $subject);
+    }
+
+    public function generateInitializationRedirectUrlMODE_A(HostedPayment $hostedPayment): string
+    {
+        $query = $hostedPayment->buildQuery();
+        $query .= '&api_key=' . $this->api_key;
+        $query .= '&signature=' . $this->generateInitializationSignatureMODE_A($hostedPayment);
+
+        return $this->merchant->getEnvironment()->getHppUrl() . "?" . $query;
     }
 
     /**
@@ -67,15 +76,8 @@ class HostedPaymentPageManager
      * @return void
      * @throws \Exception If signature not correct.
      */
-    public function assertCallbackSignature($headers, $body)
+    public function assertCallbackSignature(array $headers, string $body)
     {
-        if (!is_array($headers)) {
-            throw new \InvalidArgumentException('headers must be an array');
-        }
-        if (!is_string($body)) {
-            throw new \InvalidArgumentException('body must be a string');
-        }
-
         if (!isset($headers['X-Signature-Algorithm'])) {
             throw new \Exception('Missing "X-Signature-Algorithm" header');
         }
@@ -87,7 +89,7 @@ class HostedPaymentPageManager
         }
 
         $expected = $headers['X-Signature'];
-        $actual = hash_hmac('sha256', $body, $this->secret, false);
+        $actual = hash_hmac('sha256', $body, $this->api_secret, false);
 
         if (strcasecmp($expected, $actual) !== 0) {
             throw new \Exception('Invalid signature');
