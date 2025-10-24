@@ -18,7 +18,7 @@ class HostedPaymentTest extends TestCase
         );
 
         $this->assertSame(
-            "order_id=12345&user_id=678&amount=1.99&currency=USD&mcc=90",
+            "order_id=12345&user_id=678&amount=1.99&currency_iso=USD&mcc=90",
             $payment->buildQuery()
         );
     }
@@ -45,7 +45,7 @@ class HostedPaymentTest extends TestCase
         ]);
 
         $this->assertSame(
-            'order_id=o-1&user_id=u-2&amount=9.99&currency=EUR&mcc=m-3'
+            'order_id=o-1&user_id=u-2&amount=9.99&currency_iso=EUR&mcc=m-3'
             . '&success_url=http%3A%2F%2Fsuccess&failure_url=http%3A%2F%2Ffailure'
             . '&description=the+payment&phone=%2B123245&email=foo%40bar.baz'
             . '&custom_some_id=89&custom_mode=foo&custom_sale_id=9999',

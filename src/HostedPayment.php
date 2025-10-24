@@ -11,7 +11,7 @@ class HostedPayment
     const ORDER_ID = 'order_id';
     const USER_ID = 'user_id';
     const AMOUNT = 'amount';
-    const CURRENCY = 'currency';
+    const CURRENCY = 'currency_iso';
     const MCC = 'mcc';
 
     // Optional URLs

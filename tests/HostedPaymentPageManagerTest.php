@@ -25,7 +25,7 @@ class HostedPaymentPageManagerTest extends TestCase {
         );
     }
 
-    public function testgenerateInitializationRedirectUrlMODE_A() {
+    public function testGenerateInitializationRedirectUrlMODE_A() {
         $merchant = new MerchantAccountManager(1, 'foo');
         $hpp = $merchant->getHostedPaymentPageManager('foo', '02ruy9h8sdygfsi766');
 
@@ -38,7 +38,7 @@ class HostedPaymentPageManagerTest extends TestCase {
         );
 
         $this->assertSame(
-            'https://pay.genome.eu/?order_id=order-1&user_id=user-2&amount=9.99&currency=USD&mcc=mcc-3&api_key=foo&signature=61eb9dd0e03eb2c3745dbba5dee8a4adac7b95841985cd510bdb049237bfdf3c',
+            'https://pay.genome.eu/?order_id=order-1&user_id=user-2&amount=9.99&currency_iso=USD&mcc=mcc-3&api_key=foo&signature=61eb9dd0e03eb2c3745dbba5dee8a4adac7b95841985cd510bdb049237bfdf3c',
             $hpp->generateInitializationRedirectUrlMODE_A($payment)
         );
     }
