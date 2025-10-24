@@ -22,6 +22,8 @@ class HostedPayment
     const DESCRIPTION = 'description';
     const PHONE = 'phone';
     const EMAIL = 'email';
+    const FIRST_NAME = 'first_name';
+    const LAST_NAME = 'last_name';
 
     /**
      * @var array Hosted payment data.
@@ -168,5 +170,20 @@ class HostedPayment
     public function getEmail(): string
     {
         return $this->data[self::EMAIL];
+    }
+
+    public function setFirstLastName(string $firstName, string $lastName): HostedPayment
+    {
+        return $this->set(self::FIRST_NAME, $firstName)->set(self::LAST_NAME, $lastName);
+    }
+
+    public function getFirstName(): string
+    {
+        return $this->data[self::FIRST_NAME];
+    }
+
+    public function getLastName(string $lastName): string
+    {
+        return $this->data[self::LAST_NAME];
     }
 }
