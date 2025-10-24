@@ -14,6 +14,9 @@ class HostedPayment
     const CURRENCY = 'currency_iso';
     const MCC = 'mcc';
 
+    // Nonce
+    const TS_NONCE = 'ts_nonce';
+
     // Optional URLs
     const SUCCESS_URL = 'success_url';
     const FAILURE_URL = 'failure_url';
@@ -115,6 +118,26 @@ class HostedPayment
     public function getMcc(): string
     {
         return $this->data[self::MCC];
+    }
+
+    public function setTsNonceAutomatically(): HostedPayment
+    {
+        return $this->setTsNonce(strval(time()));
+    }
+
+    public function setTsNonce(int $nonce): HostedPayment
+    {
+        return $this->set(self::TS_NONCE, $nonce);
+    }
+
+    public function hasTsNonce(): bool
+    {
+        return isset($this->data[self::TS_NONCE]);
+    }
+
+    public function getTsNonce(): int
+    {
+        return $this->data[self::TS_NONCE];
     }
 
     public function getCurrency(): string

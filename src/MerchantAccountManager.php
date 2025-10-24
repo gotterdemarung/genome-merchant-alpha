@@ -57,10 +57,15 @@ class MerchantAccountManager
      *
      * @param string $api_key Hosted payment page API key.
      * @param string $api_secret Hosted payment page secret.
+     * @param string $redirect_signature_mode Redirect signature mode ('MODE_A', 'MODE_A_TS')
      * @return HostedPaymentPageManager.
      */
-    public function getHostedPaymentPageManager(string $api_key, string $api_secret): HostedPaymentPageManager
+    public function getHostedPaymentPageManager(
+        string $api_key,
+        string $api_secret,
+        string $redirect_signature_mode = HostedPaymentPageManager::SIGNATURE_MODE_A_TS
+    ): HostedPaymentPageManager
     {
-        return new HostedPaymentPageManager($this, $api_key, $api_secret);
+        return new HostedPaymentPageManager($this, $api_key, $api_secret, $redirect_signature_mode);
     }
 }

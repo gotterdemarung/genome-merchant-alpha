@@ -33,6 +33,7 @@ class HostedPaymentTest extends TestCase
             9.99
         );
         $payment
+            ->setTsNonce(98262535)
             ->setRedirectUrls("http://success", "http://failure")
             ->setDescription("the payment")
             ->setPhone("+123245")
@@ -45,7 +46,7 @@ class HostedPaymentTest extends TestCase
         ]);
 
         $this->assertSame(
-            'order_id=o-1&user_id=u-2&amount=9.99&currency_iso=EUR&mcc=m-3'
+            'order_id=o-1&user_id=u-2&amount=9.99&currency_iso=EUR&mcc=m-3&ts_nonce=98262535'
             . '&success_url=http%3A%2F%2Fsuccess&failure_url=http%3A%2F%2Ffailure'
             . '&description=the+payment&phone=%2B123245&email=foo%40bar.baz'
             . '&custom_some_id=89&custom_mode=foo&custom_sale_id=9999',
